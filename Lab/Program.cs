@@ -5,4 +5,4 @@ using Lab;
 var databaseManager = new DatabaseManager(Environment.CurrentDirectory, "Products.json", "ProductsPriceHistory.json");
 databaseManager.LoadData();
 
-// TODO: 
+// TODO: Test if database manager works
