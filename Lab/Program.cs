@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Text.Json;
 using Lab;
 
 var databaseManager = new DatabaseManager(Environment.CurrentDirectory, "Products.json", "ProductsPriceHistory.json");
@@ -136,15 +137,21 @@ var query6 = (from history in histories
     where history.StartDate?.Year is 2012 or 2013
     group history by history.ProductId into historyGroup
     join product in products on historyGroup.Key equals product.ProductId
+    where product.SellStartDate.Year is 2012 or 2013
+    orderby product.Name
     select new
     {
         product.ProductId,
         product.Name,
         AverageListPrice = historyGroup.Average(h => h.ListPrice)
-    }).Skip(3).Take(5).ToList();
+    })
+    .Skip(3)
+    .Take(5)
+    .ToList();
 
-// TODO: Save to json
+// Save to JSON
+var jsonString = JsonSerializer.Serialize(query6);
+var productsFilePath = Path.Combine(Environment.CurrentDirectory, "Query6.json");
+File.WriteAllText(productsFilePath, jsonString);
 
 # endregion
-
-Console.WriteLine("test");
